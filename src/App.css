@@ -1,0 +1,69 @@
+.App {
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.css-converter {
+  display: flex;
+  justify-content: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.css-input, .css-output {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+  font-size: 14px;
+  width: 500px;
+  height: 600px;
+  border-radius: 5px;
+  margin: 25px;
+  padding: 10px;
+  outline: none;
+  resize: none;
+  border: none;
+}
+
+.css-input:focus, .css-output:focus {
+  outline: 0;
+}
+
+.css-output {
+  white-space: pre-wrap;
+  transition: .1s;
+  color: white;
+  cursor: default;
+}
+
+.convert-button {
+  background: #0099ff;
+  padding: 10px 25px;
+  margin: 10px;
+  border: none;
+  color: white;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 15px;
+  transition: .25s;
+  outline: 0;
+  user-select: none;
+  font-weight: bold;
+}
+
+.convert-button:hover {
+  background: #0074c2;
+}
+
+.convert-button:active {
+  background: #004b7c;
+}
