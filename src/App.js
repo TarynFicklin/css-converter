@@ -1,47 +1,17 @@
 import React, { Component } from 'react'
 import './App.css';
 
-import outputEffects from './helpers/app/outputEffects'
-
-import upperCaseName from './helpers/component/upperCaseName'
-import toKebabCase from './helpers/key/toKebabCase'
-
-import lastCharacters from './helpers/value/lastCharacters'
-import removeDoubleQuotes from './helpers/value/removeDoubleQuotes'
-import convertCommas from './helpers/value/convertCommas'
+import dummyData          from './helpers/dummyData'
+import outputEffects      from './helpers/outputEffects'
+import convertHeader      from './helpers/convertHeader'
+import toKebabCase        from './helpers/toKebabCase'
+import removeDoubleQuotes from './helpers/removeDoubleQuotes'
+import convertCommas      from './helpers/convertCommas'
 
 class App extends Component {
 
   state = {
-    cssInput  : `  dropdown: css({
-      background: "white",
-      padding: "40px",
-      borderRadius: "3px",
-      boxShadow: "0 0 20px rgba(0,0,0,0.1)",
-      minWidth: "200px",
-      "& ul, li, a, p": {
-        marginRight: "0 !important",
-        padding: "0 !important"
-      },
-      "& ul p": {
-        marginBottom: "12px"
-      },
-      "& li:last-of-type p": {
-        marginBottom: "0px"
-      },
-      "& li:hover p": {
-        opacity: "0.5"
-      },
-      "& img": {
-        maxWidth: "50px",
-        borderRadius: "50%",
-        marginRight: "20px",
-        display: "inline-block"
-      },
-      ...responsive("tablet", {
-        display: "none"
-      })
-    }),`,
+    cssInput  : dummyData,
     cssOutput : '',
     outputBG  : outputEffects().initial,
     copied    : false
@@ -64,24 +34,26 @@ class App extends Component {
 
     lines = lines.map(line => {
       
-      let lineIndents
-      line ? (lineIndents =  ' '.repeat(line.search(/\S/))) : (lineIndents = '')
-
+      // stores the line's indents, then removes them
+      const lineIndents = line ? ' '.repeat(line.search(/\S/)) : ''
       line = line.trim()
-      line = line.split(':')
+
+      // splits the lines based off of 
+      const isSubSelector = line.charAt(1) === '&'
+      line = line.split(isSubSelector ? '":' : ':')
+
+      let isHeader = false
 
       if (line.length === 2) {
 
           let key = line[0]
           let val = line[1]
-          let isHeader = false
 
-          const { lastTwoChars } = lastCharacters(val.split(''))
-          lastTwoChars === '({' && (isHeader = true)
+          val.slice(-2) === '({' && (isHeader = true)
 
           if (isHeader) {
 
-            line = [`${upperCaseName(key)} = styled.div\``]
+            line = convertHeader(key)
 
           } else {
 
@@ -120,7 +92,6 @@ class App extends Component {
 
     // restore the lines
     lines = lines.join('\n')
-
     this.copyCSSOutput(lines)
   }
 

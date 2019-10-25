@@ -1,4 +1,4 @@
-module.exports = (input) => ({
+module.exports = input => ({
 
   initial : {
     background : 'rgba(255,255,255,.25)',
