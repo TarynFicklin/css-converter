@@ -42,7 +42,7 @@ class App extends Component {
     const hasOpeningBracket = str => str.includes('{') && (bracketsFound++)
     const hasClosingBracket = str => str.includes('}') && (bracketsFound--)
     
-    // await this.pasteClipboard()
+    await this.pasteClipboard()
     lines = cssInput.split('\n')
 
     lines = lines.map(line => {
@@ -128,7 +128,6 @@ class App extends Component {
               className="css-input"
               value={cssInput}
               ref="cssInput"
-              // onClick={() => pasteClipboard()}
               onChange={e => handleInput(e.target.value, 'cssInput')}
             />
           </div>
