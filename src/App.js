@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import './App.css';
 
-import dummyData          from './helpers/dummyData'
-import outputEffects      from './helpers/outputEffects'
-import convertHeader      from './helpers/convertHeader'
-import toKebabCase        from './helpers/toKebabCase'
-import removeDoubleQuotes from './helpers/removeDoubleQuotes'
-import convertCommas      from './helpers/convertCommas'
+import dummyData     from './helpers/dummyData'
+import outputEffects from './helpers/outputEffects'
+import cssConversion from './helpers/cssConversion'
 
 class App extends Component {
 
@@ -25,64 +22,73 @@ class App extends Component {
   }
 
   convertCSS = async () => {
-    const { cssInput } = this.state
-    let lines = []
 
+    const {
+      storeIndents,
+      isKeyValuePair,
+      isSubselector,
+      isHeader,
+      convertHeader,
+      toKebabCase,
+      removeDoubleQuotes,
+      convertCommas,
+      addMissingSemicolon,
+      addFinalBacktick
+    } = cssConversion
+
+    const { cssInput }  = this.state
+    let   lines         = []
+    let   bracketsFound = 0
+    const hasOpeningBracket = str => str.includes('{') && (bracketsFound++)
+    const hasClosingBracket = str => str.includes('}') && (bracketsFound--)
+    
     // await this.pasteClipboard()
     lines = cssInput.split('\n')
-    let foundBracket = false
 
     lines = lines.map(line => {
       
       // stores the line's indents, then removes them
-      const lineIndents = line ? ' '.repeat(line.search(/\S/)) : ''
+      const lineIndents = storeIndents(line)
       line = line.trim()
 
-      // splits the lines based off of 
-      const isSubSelector = line.charAt(1) === '&'
+      // splits the lines based off of whether it's a subselector or not
+      const isSubSelector = isSubselector(line)
       line = line.split(isSubSelector ? '":' : ':')
 
-      let isHeader = false
+      if (isKeyValuePair(line)) {
 
-      if (line.length === 2) {
+        let key = line[0]
+        let val = line[1]
 
-          let key = line[0]
-          let val = line[1]
+        const convertKeyValue = () => {
 
-          val.slice(-2) === '({' && (isHeader = true)
-
-          if (isHeader) {
-
-            line = convertHeader(key)
-
-          } else {
-
-            if (key) {
-              key = removeDoubleQuotes(key)
-              key = toKebabCase(key)
-            }
-  
-            if (val) {
-              val = val.trim()
-              val = removeDoubleQuotes(val)
-              val = convertCommas(val)
-              
-              val.includes('{') && (foundBracket = true)
-              !val.includes(';') && !val.includes('{') && (val = `${val};`)
-            }
-  
-            // restore the line array
-            line = [key, val]
-
+          if (key) {
+            key = removeDoubleQuotes(key)
+            key = toKebabCase(key)
           }
 
+          if (val) {
+            val = val.trim()
+            val = removeDoubleQuotes(val)
+            val = convertCommas(val)
+                  hasOpeningBracket(val)
+            val = addMissingSemicolon(val)
+          }
+
+          line = [key, val]
+
+        }
+
+        isHeader(val) ? (line = convertHeader(key)) : convertKeyValue()
+
       } else {
-        line[0].includes('{') && (foundBracket = true)
-        !foundBracket && line[0].includes('})') && (line[0] = '`')
-        line[0].includes('}') && (foundBracket = false)
+
+        hasOpeningBracket(line[0])
+        !bracketsFound && (line[0] = addFinalBacktick(line[0]))
+        hasClosingBracket(line[0])
+
       }
 
-      // restore the line
       line = line.join(': ')
       line = `${lineIndents}${line}`
 
@@ -90,9 +96,9 @@ class App extends Component {
       
     })
 
-    // restore the lines
     lines = lines.join('\n')
     this.copyCSSOutput(lines)
+
   }
 
   copyCSSOutput = input => {
