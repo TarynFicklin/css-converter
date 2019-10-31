@@ -12,5 +12,5 @@ module.exports = {
   convertResponsive   : str => `\${responsive.${str.match(/"((?:\\.|[^"\\])*)"/)[1]}\``,
   convertEndBrackets  : str => str.includes('})') ? '`}' : str,
   addMissingSemicolon : str => !str.includes(';') && !str.includes('{') ? `${str};` : str,
-  addFinalBacktick    : str => str.includes('})') ? '`]' : str,
+  addFinalBacktick    : str => str.includes('})') ? '`],' : str,
 }
