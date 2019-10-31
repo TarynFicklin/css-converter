@@ -24,7 +24,7 @@ dropdown: css({
     marginRight: "20px",
     display: "inline-block"
   },
-  ...responsive("tablet", {
+  ...oldResponsive("tablet", {
     display: "none"
   })
 }),

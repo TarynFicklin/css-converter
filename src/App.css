@@ -31,6 +31,7 @@
   outline: none;
   resize: none;
   border: none;
+  cursor: default;
 }
 
 .css-input:focus, .css-output:focus {
@@ -41,7 +42,6 @@
   white-space: pre-wrap;
   transition: .1s;
   color: white;
-  cursor: default;
 }
 
 .convert-button {
@@ -66,4 +66,8 @@
 
 .convert-button:active {
   background: #004b7c;
+}
+
+.convert-button-copied {
+  opacity: 0.5;
 }
