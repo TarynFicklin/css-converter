@@ -1,5 +1,6 @@
 module.exports = {
-  storeIndents        : str => str ? ' '.repeat(str.search(/\S/)) : '',
+  indentCount         : str => str.search(/\S/),
+  storeIndents        : num => num === -1 ? '' : ' '.repeat(num),
   isKeyValuePair      : arr => arr.length === 2,
   isSubselector       : str => str.charAt(1) === '&',
   convertSubselector  : str => str.replace(/[': {']+/g, ' {'),

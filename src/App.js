@@ -24,6 +24,7 @@ class App extends Component {
   convertCSS = async () => {
 
     const {
+      indentCount,
       storeIndents,
       isKeyValuePair,
       isSubselector,
@@ -53,7 +54,8 @@ class App extends Component {
     lines = lines.map(line => {
       
       // stores the line's indents, then removes them
-      const lineIndents = storeIndents(line)
+      const indents = indentCount(line)
+      const lineIndents = storeIndents(indents)
       line = line.trim()
 
       // splits the lines based off of whether it's a subselector or not
