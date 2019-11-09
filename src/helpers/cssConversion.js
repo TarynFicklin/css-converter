@@ -5,7 +5,7 @@ module.exports = {
   isSubselector       : str => str.charAt(1) === '&',
   convertSubselector  : str => str.replace(/[': {']+/g, ' {'),
   isHeader            : str => str.slice(-2) === '({',
-  convertHeader       : str => [`[p.${str}, \``],
+  convertHeader       : str => [`const ${str.charAt(0).toUpperCase()}${str.slice(1)} = styled.div\``],
   toKebabCase         : str => str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase(),
   removeDoubleQuotes  : str => str.replace(/['"]+/g, ''),
   convertCommas       : str => str.slice(-1) === ',' ? `${str.slice(0, -1)};` : str,
@@ -13,5 +13,5 @@ module.exports = {
   convertResponsive   : str => `\${responsive.${str.match(/"((?:\\.|[^"\\])*)"/)[1]}\``,
   convertEndBrackets  : str => str.includes('})') ? '`}' : str,
   addMissingSemicolon : str => !str.includes(';') && !str.includes('{') ? `${str};` : str,
-  addFinalBacktick    : str => str.includes('})') ? '`],' : str,
+  addFinalBacktick    : str => str.includes('})') ? '`' : str,
 }
